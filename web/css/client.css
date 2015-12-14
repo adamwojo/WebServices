@@ -8,6 +8,10 @@
   margin-left: auto;
   visibility: hidden;
 }
+#userDisplay{
+    text-align:center;
+    margin-bottom:10px;
+}
 .tictactoeboard{
     background-color: #ffffff;
     background-repeat: no-repeat;

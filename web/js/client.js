@@ -438,6 +438,9 @@ require(["dojo/dom-construct", "dojo/dom", "dojo/domReady!"],
     create = '<div id="tictactoebuttons"></div>';
     domConstruct.place(domConstruct.toDom(create), "button");
     
+    create = '<div id="userDisplay"></div>';
+    domConstruct.place(domConstruct.toDom(create), "wrapper");
+    
     create = '<div id="resultDiv">YOU HAVE WON!!!</div>';
     domConstruct.place(domConstruct.toDom(create), "wrapper");
     create = '<div id="tictactoe"></div>';
@@ -470,13 +473,17 @@ require(["dijit/form/Button", "dojo/dom", "dojo/domReady!"], function (Button, d
     label: "Login",
     onClick: function (evt) {
         u = dom.byId("user").value;
-                    p = dom.byId("pwd").value;
-                    // prevent the page from navigating after submit
-                    evt.stopPropagation();
-                    evt.preventDefault();
-                    //var external = "http://bost.ocks.org/mike/drought/pdsi.json";
-                    //var internal = "data/sample.json";
-                    post_login(u,p); //call to dojo AJAX REST service
+        p = dom.byId("pwd").value;
+        // prevent the page from navigating after submit
+        evt.stopPropagation();
+        evt.preventDefault();
+        //var external = "http://bost.ocks.org/mike/drought/pdsi.json";
+        //var internal = "data/sample.json";
+        post_login(u,p); //call to dojo AJAX REST service
+        if (localStorage.username !== "")
+            dom.byId("userDisplay").innerHTML = "Welcome to Tic Tac Toe, " + localStorage.username;
+        else
+            dom.byId("userDisplay").innerHTML = "Welcome to Tic Tac Toe, you are not logged in";
     }
   }, "login").startup();
   
@@ -493,6 +500,11 @@ require(["dijit/form/Button", "dojo/dom", "dojo/domReady!"], function (Button, d
         evt.preventDefault();
         
         post_create(u,p);
+        
+        if (localStorage.username !== "")
+            dom.byId("userDisplay").innerHTML = "Welcome to Tic Tac Toe, " + localStorage.username;
+        else
+            dom.byId("userDisplay").innerHTML = "Welcome to Tic Tac Toe, you are not logged in";
     }
   }, "create").startup();
   
@@ -507,6 +519,11 @@ require(["dijit/form/Button", "dojo/dom", "dojo/domReady!"], function (Button, d
         createChart(i,1);
       }
       dom.byId("tictactoe").style.visibility = "visible";
+      
+      if (localStorage.username !== "")
+          dom.byId("userDisplay").innerHTML = "Welcome to Tic Tac Toe, " + localStorage.username;
+      else
+          dom.byId("userDisplay").innerHTML = "Welcome to Tic Tac Toe, you are not logged in";
     }
   }, "ai").startup();
   
@@ -524,6 +541,11 @@ require(["dijit/form/Button", "dojo/dom", "dojo/domReady!"], function (Button, d
       if(Math.floor(Math.random()*2)==0){
           easyAI();
       }
+      
+        if (localStorage.username !== "")
+            dom.byId("userDisplay").innerHTML = "Welcome to Tic Tac Toe, " + localStorage.username;
+        else
+            dom.byId("userDisplay").innerHTML = "Welcome to Tic Tac Toe, you are not logged in";
     }
   }, "easyai").startup();
   
@@ -764,3 +786,6 @@ function post_checkStat(uid,type){
             );
         });
 }
+
+//logout the user on page unload so they don't stay connected to the DB
+document.onunload = post_logout(localStorage.username);
